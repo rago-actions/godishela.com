@@ -109,6 +109,15 @@
     .project p { color: var(--muted); margin: 0; }
     .project .more { display: inline-block; margin-top: 1.25rem; font-weight: 500; color: var(--fg); }
 
+    .feature { padding: 2.5rem; border-radius: 24px; background: var(--card); }
+    .feature-head { display: flex; align-items: center; gap: 0.75rem; }
+    .feature h3 { font: 400 clamp(1.75rem, 3.5vw, 2.6rem)/1.15 var(--serif); margin: 1.25rem 0 0.75rem; }
+    .feature > p { color: var(--muted); margin: 0; max-width: 44rem; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    .stats b { display: block; font: 400 2.25rem/1 var(--serif); }
+    .stats span { color: var(--muted); font-size: 0.9rem; }
+    .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .chips li { padding: 0.4rem 0.9rem; border-radius: 999px; background: var(--card); font-size: 0.92rem; }
     .timeline { list-style: none; margin: 0; padding: 0; }
     .timeline li { display: grid; grid-template-columns: 160px 1fr; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid var(--line); }
     .timeline li:last-child { border-bottom: 1px solid var(--line); }
@@ -124,6 +133,8 @@
       .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 0 3rem; }
       .facts { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 3rem; }
       .timeline li { grid-template-columns: 1fr; gap: 0.25rem; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .feature { padding: 1.75rem; }
       .intro { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 2.5rem; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -139,6 +150,7 @@
       <a class="logo" href="/" aria-label="Home">RG</a>
       <nav aria-label="Primary">
         <a href="#about">About</a>
+        <a href="#impact">Impact</a>
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
       </nav>
@@ -162,7 +174,7 @@
             </div>
             <div>
               <h2>Certified</h2>
-              <p>2× Claude Certified</p>
+              <p>Claude, AWS, Terraform</p>
             </div>
           </div>
         </div>
@@ -180,6 +192,21 @@
         </aside>
       </div>
 
+      <section id="impact">
+        <p class="label">Impact</p>
+        <div class="feature">
+          <div class="feature-head"><strong>Salesforce</strong> <span class="tag">2018 — Now</span></div>
+          <h3>Shipping to 62 clusters without breaking things.</h3>
+          <p>Led continuous deployment across 41 private data center clusters and 21 AWS EKS clusters, with GitOps, drift detection and Python tooling.</p>
+          <div class="stats">
+            <div><b>40%</b><span>faster deployments</span></div>
+            <div><b>70%</b><span>faster rollbacks</span></div>
+            <div><b>~3 days</b><span>saved per engineer, monthly</span></div>
+            <div><b>7</b><span>teams founded &amp; led</span></div>
+          </div>
+        </div>
+      </section>
+
       <section id="experience">
         <p class="label">Experience</p>
         <ol class="timeline">
@@ -188,7 +215,7 @@
             <div>
               <h3>Salesforce</h3>
               <p class="role">Lead Software Engineer, App Performance</p>
-              <p>Coreapp Production Engineering: keeping Tier 0 services like Coreapp, MQ (async processing) and VegaCache (caching) healthy. Before that, 6.5 years leading Analytics Cloud Platform Engineering: built four teams and ran CI/CD for low-latency, batch, Redis and Cassandra workloads.</p>
+              <p>Coreapp Production Engineering: keeping Tier 0 services like Coreapp, MQ (async processing) and VegaCache (caching) healthy. Before that, 6.5 years leading Analytics Cloud Platform Engineering: built four teams, ran CI/CD for low-latency, batch, Redis and Cassandra workloads, and built a Django platform for incident management, app security and cloud resources.</p>
             </div>
           </li>
           <li>
@@ -215,6 +242,20 @@
             </div>
           </li>
         </ol>
+      </section>
+
+      <section id="certifications">
+        <p class="label">Certifications</p>
+        <ul class="chips">
+          <li>Claude Certified Architect</li>
+          <li>Claude Certified Developer</li>
+          <li>AWS Data Engineer, Professional</li>
+          <li>AWS Solutions Architect, Associate</li>
+          <li>AWS Cloud Practitioner</li>
+          <li>HashiCorp Terraform Associate</li>
+          <li>Professional Scrum Master I</li>
+          <li>Professional Scrum Product Owner I</li>
+        </ul>
       </section>
 
       <section id="projects">
