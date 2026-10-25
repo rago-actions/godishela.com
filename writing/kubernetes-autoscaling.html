@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Three Ways Kubernetes Scales: HPA, VPA and Cluster Autoscaler · Ramesh Godishela</title>
+  <meta name="description" content="Kubernetes has three standard autoscalers. Each solves a different problem: how many pods, how big each pod is, and how many nodes the cluster has.">
+  <meta property="og:title" content="Three Ways Kubernetes Scales: HPA, VPA and Cluster Autoscaler">
+  <meta property="og:description" content="Kubernetes has three standard autoscalers. Each solves a different problem: how many pods, how big each pod is, and how many nodes the cluster has.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://godishela.com/writing/kubernetes-autoscaling.html">
+  <meta property="og:image" content="https://godishela.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23fb923c'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='%23111214' font-family='Georgia,serif'>RG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="/" aria-label="Home">RG</a>
+      <a class="back" href="/#writing">← All writing</a>
+    </header>
+    <main>
+      <article>
+        <p class="meta">Oct 2026 · Kubernetes · Ramesh Godishela</p>
+        <h1>Three Ways Kubernetes Scales: HPA, VPA and Cluster Autoscaler</h1>
+        <p class="lede">Kubernetes has three standard autoscalers. Each solves a different problem: how many pods, how big each pod is, and how many nodes the cluster has.</p>
+        <h2>Horizontal Pod Autoscaler (HPA)</h2>
+        <p>Changes the <strong>number of pods</strong> running an application or ML model. It scales on CPU and memory out of the box, and on custom metrics such as GPU utilization or requests per second through a metrics adapter. When demand spikes, HPA adds pods. When load drops, it removes them.</p>
+        <h2>Vertical Pod Autoscaler (VPA)</h2>
+        <p>Changes <strong>how much CPU and memory</strong> each container requests, based on what it actually uses. Right-sized requests mean you get more out of every node. VPA is an add-on you install separately, and it handles CPU and memory only.</p>
+        <h2>Cluster Autoscaler (CA)</h2>
+        <p>Changes the <strong>number of nodes</strong>. It adds nodes when pods can't be scheduled, and removes nodes that sit underused. That makes it essential for serving large ML models to a large user base, where demand can outgrow the cluster quickly.</p>
+        <h2>Using them together</h2>
+        <ul>
+          <li>HPA and Cluster Autoscaler pair naturally: HPA adds pods, and CA adds nodes when those pods don't fit.</li>
+          <li>Don't let HPA and VPA both act on CPU or memory for the same workload. They'll fight each other. If you need both, drive HPA from a custom metric such as requests per second.</li>
+        </ul>
+      </article>
+    </main>
+    <footer>
+      <a href="/#writing">← All writing</a>
+      <a href="/#contact">Say hi</a>
+    </footer>
+  </div>
+</body>
+</html>

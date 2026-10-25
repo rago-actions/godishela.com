@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automating Node Reboots in Kubernetes with kured · Ramesh Godishela</title>
+  <meta name="description" content="Kernel patches need reboots. Doing them by hand across a large cluster is slow and risky. kured, the Kubernetes Reboot Daemon, does it for you, one node at a time.">
+  <meta property="og:title" content="Automating Node Reboots in Kubernetes with kured">
+  <meta property="og:description" content="Kernel patches need reboots. Doing them by hand across a large cluster is slow and risky. kured, the Kubernetes Reboot Daemon, does it for you, one node at a time.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://godishela.com/writing/kured.html">
+  <meta property="og:image" content="https://godishela.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23fb923c'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='%23111214' font-family='Georgia,serif'>RG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="/" aria-label="Home">RG</a>
+      <a class="back" href="/#writing">← All writing</a>
+    </header>
+    <main>
+      <article>
+        <p class="meta">Oct 2026 · Kubernetes · Ramesh Godishela</p>
+        <h1>Automating Node Reboots in Kubernetes with kured</h1>
+        <p class="lede">Kernel patches need reboots. Doing them by hand across a large cluster is slow and risky. kured, the Kubernetes Reboot Daemon, does it for you, one node at a time.</p>
+        <h2>Why node reboots are hard</h2>
+        <ul>
+          <li><strong>Disruption:</strong> a careless reboot means downtime for whatever runs on the node.</li>
+          <li><strong>Coordination:</strong> you have to reboot without taking too much of the cluster down at once.</li>
+          <li><strong>Manual work:</strong> slow and error-prone across many nodes.</li>
+          <li><strong>Visibility:</strong> it's hard to track which nodes rebooted and came back healthy.</li>
+          <li><strong>Critical workloads:</strong> some pods shouldn't be interrupted at all.</li>
+        </ul>
+        <h2>What kured does</h2>
+        <p>kured runs as a DaemonSet. On each node it watches for a sentinel file (by default <code>/var/run/reboot-required</code>, which many Linux distributions create after a kernel update). When the file appears, kured:</p>
+        <ol>
+          <li>takes a cluster-wide lock so only one node reboots at a time,</li>
+          <li>cordons and drains the node,</li>
+          <li>reboots it,</li>
+          <li>uncordons it and releases the lock.</li>
+        </ol>
+        <p>Patches get applied promptly, and nobody has to babysit the process.</p>
+        <h2>Install</h2>
+        <p>kured now lives under the <code>kubereboot</code> organization. Older guides point to <code>weaveworks</code> URLs, which no longer work.</p>
+        <p>With Helm:</p>
+        <pre><code>helm repo add kubereboot https://kubereboot.github.io/charts
+helm repo update
+helm install kured kubereboot/kured --namespace kube-system</code></pre>
+        <p>Without Helm, apply the release manifest:</p>
+        <pre><code>latest=$(curl -s https://api.github.com/repos/kubereboot/kured/releases | jq -r &#x27;.[0].tag_name&#x27;)
+kubectl apply -f &quot;https://github.com/kubereboot/kured/releases/download/$latest/kured-$latest-combined.yaml&quot;</code></pre>
+        <h2>Configure</h2>
+        <p>kured is configured with command-line flags. The ones that matter most:</p>
+        <ul>
+          <li><code>--reboot-sentinel</code>: the file that signals a reboot is needed.</li>
+          <li><code>--start-time</code>, <code>--end-time</code>, <code>--time-zone</code>, <code>--reboot-days</code>: the maintenance window.</li>
+          <li><code>--drain-timeout</code>: give up on a drain after this long. The default waits forever.</li>
+          <li><code>--prometheus-url</code>: don't reboot while Prometheus has active alerts.</li>
+          <li><code>--blocking-pod-selector</code>: don't reboot a node while pods matching this label run on it.</li>
+          <li><code>--period</code>: how often to check for the sentinel file (default 1 hour).</li>
+        </ul>
+        <p>With Helm, set them in a values file:</p>
+        <pre><code>configuration:
+  rebootSentinel: /var/run/reboot-required
+  startTime: &quot;23:00&quot;
+  endTime: &quot;05:00&quot;
+  timeZone: Asia/Kolkata
+  rebootDays: [mo, tu, we, th, fr]
+  drainTimeout: 30m
+  prometheusUrl: http://prometheus-server
+  blockingPodSelector:
+    - app=critical-batch</code></pre>
+        <pre><code>helm upgrade kured kubereboot/kured --namespace kube-system -f values.yaml</code></pre>
+        <p>To keep kured off certain nodes entirely, stop its DaemonSet from scheduling there with a <code>nodeSelector</code> or node affinity.</p>
+        <h2>Verify and test</h2>
+        <pre><code>kubectl get daemonset kured -n kube-system
+kubectl logs -n kube-system daemonset/kured</code></pre>
+        <p>To force a test reboot, create the sentinel file on a node. kured will pick it up on its next check, inside your maintenance window:</p>
+        <pre><code>sudo touch /var/run/reboot-required</code></pre>
+        <p>Afterwards, check the logs again to confirm the node drained, rebooted and rejoined.</p>
+        <h2>Worth knowing</h2>
+        <ul>
+          <li><strong>Locking:</strong> kured stores its lock as an annotation on its own DaemonSet. That's what keeps reboots to one node at a time. <code>--concurrency</code> raises the limit if your cluster can take it.</li>
+          <li><strong>Maintenance windows:</strong> line them up with your organization's change windows, so production never reboots at peak.</li>
+          <li><strong>Metrics:</strong> kured exposes Prometheus metrics, so you can alert on nodes that have needed a reboot for too long.</li>
+        </ul>
+      </article>
+    </main>
+    <footer>
+      <a href="/#writing">← All writing</a>
+      <a href="/#contact">Say hi</a>
+    </footer>
+  </div>
+</body>
+</html>

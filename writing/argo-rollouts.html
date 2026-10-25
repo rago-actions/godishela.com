@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Safe Deployments with Argo Rollouts · Ramesh Godishela</title>
+  <meta name="description" content="A plain Kubernetes Deployment swaps out pods and hopes for the best. Argo Rollouts lets you ship to a slice of traffic first, check the numbers, and roll back on its own if they look bad.">
+  <meta property="og:title" content="Safe Deployments with Argo Rollouts">
+  <meta property="og:description" content="A plain Kubernetes Deployment swaps out pods and hopes for the best. Argo Rollouts lets you ship to a slice of traffic first, check the numbers, and roll back on its own if they look bad.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://godishela.com/writing/argo-rollouts.html">
+  <meta property="og:image" content="https://godishela.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23fb923c'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='%23111214' font-family='Georgia,serif'>RG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="/" aria-label="Home">RG</a>
+      <a class="back" href="/#writing">← All writing</a>
+    </header>
+    <main>
+      <article>
+        <p class="meta">Oct 2026 · Kubernetes · Ramesh Godishela</p>
+        <h1>Safe Deployments with Argo Rollouts</h1>
+        <p class="lede">A plain Kubernetes Deployment swaps out pods and hopes for the best. Argo Rollouts lets you ship to a slice of traffic first, check the numbers, and roll back on its own if they look bad.</p>
+        <h2>Install</h2>
+        <p>Install the kubectl plugin and check it works:</p>
+        <pre><code>brew install argoproj/tap/kubectl-argo-rollouts
+kubectl argo rollouts version</code></pre>
+        <p>Install the controller into its own namespace and confirm the resources came up:</p>
+        <pre><code>kubectl create namespace argo-rollouts
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+kubectl get all -n argo-rollouts</code></pre>
+        <h2>Define a Rollout</h2>
+        <p>A <code>Rollout</code> replaces a <code>Deployment</code>. It takes the same pod template, plus a strategy that says how to move traffic to the new version.</p>
+        <pre><code>apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: test-rollout
+  namespace: default
+spec:
+  replicas: 3
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: test-container
+        image: your-docker-image:tag
+        ports:
+        - containerPort: 80
+  strategy:
+    canary:
+      canaryService: canary-service
+      stableService: stable-service
+      steps:
+      - setWeight: 20
+      - pause: { duration: 1m }
+      - setWeight: 50
+      - pause: { duration: 2m }
+      - setWeight: 100</code></pre>
+        <ul>
+          <li><strong>Canary strategy:</strong> shifts traffic to the new version in stages instead of all at once.</li>
+          <li><strong><code>setWeight</code></strong>: the share of traffic the new version gets.</li>
+          <li><strong><code>pause</code></strong>: time to watch metrics before the next step. Leave out <code>duration</code> to wait for a manual promote.</li>
+        </ul>
+        <p>Without a traffic router, Argo approximates the weight by scaling canary pods, so with only 3 replicas the split is coarse. A traffic router (below) gives exact percentages.</p>
+        <h2>Route traffic to stable and canary</h2>
+        <p>Create two Services with the same selector. Argo adds a pod-template hash to each one, so <code>stable-service</code> only reaches stable pods and <code>canary-service</code> only reaches canary pods.</p>
+        <pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: stable-service
+spec:
+  selector:
+    app: test-app
+  ports:
+  - port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: canary-service
+spec:
+  selector:
+    app: test-app
+  ports:
+  - port: 80</code></pre>
+        <p>For precise traffic splits, add <code>trafficRouting</code> to the canary strategy and plug in Istio, NGINX or the AWS Load Balancer Controller.</p>
+        <h2>Apply and watch</h2>
+        <pre><code>kubectl apply -f rollout.yaml
+kubectl argo rollouts get rollout test-rollout --watch
+kubectl argo rollouts dashboard   # web UI on localhost:3100</code></pre>
+        <p>If the canary looks healthy, send it all traffic. If not, roll back:</p>
+        <pre><code>kubectl argo rollouts promote test-rollout
+kubectl argo rollouts abort test-rollout</code></pre>
+        <h2>Let metrics make the call</h2>
+        <p>Manual checks don't scale. An <code>AnalysisTemplate</code> queries your metrics during the rollout and aborts it if they cross a line. This one fails the canary if more than 5% of requests return a 5xx:</p>
+        <pre><code>apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: error-rate
+spec:
+  metrics:
+  - name: error-rate
+    interval: 1m
+    failureLimit: 1
+    successCondition: result[0] &lt; 0.05
+    provider:
+      prometheus:
+        address: http://prometheus-server
+        query: |
+          sum(rate(http_requests_total{app=&quot;test-app&quot;,status=~&quot;5..&quot;}[5m]))
+          /
+          sum(rate(http_requests_total{app=&quot;test-app&quot;}[5m]))</code></pre>
+        <p>Measure errors as a share of all requests, not a raw count. A raw count of errors per second means different things at 10 and 10,000 requests per second.</p>
+        <p>Reference the template from a step in the Rollout:</p>
+        <pre><code>      steps:
+      - setWeight: 20
+      - pause: { duration: 1m }
+      - analysis:
+          templates:
+          - templateName: error-rate</code></pre>
+        <h2>Before you go to production</h2>
+        <ul>
+          <li>Run the whole flow in staging first.</li>
+          <li>Watch logs and metrics while traffic is split, and make sure you can tell canary traffic from stable.</li>
+          <li>Turn on Argo Rollouts notifications so promotions, pauses and aborts show up in Slack.</li>
+        </ul>
+      </article>
+    </main>
+    <footer>
+      <a href="/#writing">← All writing</a>
+      <a href="/#contact">Say hi</a>
+    </footer>
+  </div>
+</body>
+</html>

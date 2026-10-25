@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cleaning Up Forgotten Kubernetes Resources with kube-janitor · Ramesh Godishela</title>
+  <meta name="description" content="Test deployments, pull-request environments and unused volumes pile up quietly and cost money. kube-janitor deletes them on a schedule you define.">
+  <meta property="og:title" content="Cleaning Up Forgotten Kubernetes Resources with kube-janitor">
+  <meta property="og:description" content="Test deployments, pull-request environments and unused volumes pile up quietly and cost money. kube-janitor deletes them on a schedule you define.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://godishela.com/writing/kube-janitor.html">
+  <meta property="og:image" content="https://godishela.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23fb923c'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='%23111214' font-family='Georgia,serif'>RG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="/" aria-label="Home">RG</a>
+      <a class="back" href="/#writing">← All writing</a>
+    </header>
+    <main>
+      <article>
+        <p class="meta">Oct 2026 · Kubernetes · Ramesh Godishela</p>
+        <h1>Cleaning Up Forgotten Kubernetes Resources with kube-janitor</h1>
+        <p class="lede">Test deployments, pull-request environments and unused volumes pile up quietly and cost money. kube-janitor deletes them on a schedule you define.</p>
+        <h2>How it works</h2>
+        <p>kube-janitor scans all namespaces and namespaced resources, including custom resources. It deletes a resource when:</p>
+        <ul>
+          <li>its <code>janitor/ttl</code> annotation says it has lived long enough (for example <code>24h</code> or <code>7d</code>),</li>
+          <li>its <code>janitor/expires</code> annotation gives a date and time that has passed, or</li>
+          <li>a rule in the rules file matches it and its TTL has run out.</li>
+        </ul>
+        <h2>Install</h2>
+        <p>The project lives on Codeberg. Deploy it from the repository with Kustomize:</p>
+        <pre><code>git clone https://codeberg.org/hjacobs/kube-janitor.git
+cd kube-janitor
+kubectl apply -k deploy/</code></pre>
+        <p>This deploys to the <code>default</code> namespace. For another namespace, edit <code>deploy/rbac.yaml</code> first.</p>
+        <p>The example configuration runs with <code>--dry-run</code>, so it only logs what it would delete. Keep it that way until the logs look right, then remove the flag:</p>
+        <pre><code>kubectl edit deploy kube-janitor</code></pre>
+        <h2>Try it</h2>
+        <p>Create a throwaway deployment and give it five minutes to live:</p>
+        <pre><code>kubectl create deployment temp-nginx --image=nginx
+kubectl annotate deploy temp-nginx janitor/ttl=5m</code></pre>
+        <p>Or delete it at a fixed time instead:</p>
+        <pre><code>kubectl annotate deploy temp-nginx janitor/expires=2026-12-31T00:00:00Z</code></pre>
+        <h2>Rules for things nobody annotates</h2>
+        <p>Annotations need people to remember them. Rules don't. Each rule matches resources with a JMESPath expression and gives them a TTL. These delete pull-request deployments after 4 hours, and PVCs that no pod mounts and no StatefulSet references after 4 days:</p>
+        <pre><code>rules:
+- id: cleanup-pr-deployments
+  resources:
+  - deployments
+  jmespath: &quot;starts_with(metadata.name, &#x27;pr-&#x27;)&quot;
+  ttl: 4h
+- id: remove-unused-pvcs
+  resources:
+  - persistentvolumeclaims
+  jmespath: &quot;_context.pvc_is_not_mounted &amp;&amp; _context.pvc_is_not_referenced&quot;
+  ttl: 4d</code></pre>
+        <p>The rules live in the <code>kube-janitor</code> ConfigMap. Edit it, then restart the pod to load the changes:</p>
+        <pre><code>kubectl edit configmap kube-janitor
+kubectl rollout restart deploy kube-janitor</code></pre>
+        <p>Resources with their own <code>janitor/ttl</code> annotation skip the rules. The first matching rule wins.</p>
+        <h2>What about the volumes?</h2>
+        <p>kube-janitor works on namespaced resources like PVCs. PersistentVolumes are cluster-scoped. What happens to the disk once its PVC is deleted depends on the volume's reclaim policy: <code>Delete</code> frees it, <code>Retain</code> keeps it for manual cleanup.</p>
+        <h2>Check it's working</h2>
+        <pre><code>kubectl logs deploy/kube-janitor
+kubectl get pvc --all-namespaces</code></pre>
+        <p>Compare what's listed before and after a run. In dry-run mode, the logs show exactly what would have been deleted.</p>
+        <p>Start in a non-production cluster. A janitor with the wrong rule deletes things just as efficiently as one with the right rule.</p>
+      </article>
+    </main>
+    <footer>
+      <a href="/#writing">← All writing</a>
+      <a href="/#contact">Say hi</a>
+    </footer>
+  </div>
+</body>
+</html>
