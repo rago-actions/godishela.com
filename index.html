@@ -170,21 +170,41 @@
     .avatar { box-shadow: 0 0 0 3px var(--accent), 0 0 40px -6px var(--accent2); }
     .tag { color: var(--accent2); }
 
+    .track { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+    .track::-webkit-scrollbar { display: none; }
+    .quote { flex: 0 0 100%; scroll-snap-align: start; margin: 0; padding: 2.5rem; border-radius: 24px; background: var(--card); border: 1px solid var(--line); }
+    .quote blockquote { margin: 0; font: 400 clamp(1.25rem, 2.4vw, 1.75rem)/1.45 var(--serif); max-width: 52rem; }
+    .quote figcaption { margin-top: 1.5rem; color: var(--muted); font-size: 0.95rem; }
+    .quote figcaption b { display: block; color: var(--fg); font-weight: 600; font-size: 1rem; }
+    .quote-nav { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.25rem; }
+    .arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--fg); font-size: 1.1rem; cursor: pointer; }
+    .arrow:hover, .arrow:focus-visible { border-color: var(--accent); color: var(--accent); }
+    .dots { display: flex; }
+    .dots button { width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+    .dots button::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--line); transition: width 0.2s ease; }
+    .dots button[aria-current="true"]::before { width: 18px; background: var(--accent); }
+    .quote-nav .more { margin-left: auto; color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
+    .quote-nav .more:hover, .quote-nav .more:focus-visible { color: var(--accent); }
+
     footer { padding: 4rem 0 3rem; color: var(--muted); font-size: 0.9rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 
     @media (max-width: 860px) {
       header { flex-wrap: wrap; row-gap: 1rem; }
-      nav { order: 3; width: 100%; gap: 1.1rem; overflow-x: auto; white-space: nowrap; font-size: 0.95rem; }
+      nav { order: 3; width: 100%; gap: 0.5rem 1.1rem; flex-wrap: wrap; font-size: 0.95rem; }
       .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 0 3rem; }
       .facts { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 3rem; }
       .timeline li { grid-template-columns: 1fr; gap: 0.25rem; }
       .stats { grid-template-columns: repeat(2, 1fr); }
       .feature { padding: 1.75rem; }
+      .quote { padding: 1.75rem; }
+      .quote-nav { flex-wrap: wrap; }
       .intro { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 2.5rem; }
     }
     @media (prefers-reduced-motion: reduce) {
       .rotator span { animation: none; }
       .project { transition: none; }
+      .track { scroll-behavior: auto; }
+      .dots button::before { transition: none; }
       html { scroll-behavior: auto; }
     }
   </style>
@@ -196,6 +216,7 @@
       <nav aria-label="Primary">
         <a href="#about">About</a>
         <a href="#impact">Impact</a>
+        <a href="#kind-words">Kind words</a>
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
       </nav>
@@ -269,6 +290,35 @@
         </div>
       </section>
 
+      <section id="kind-words">
+        <p class="label">Kind words</p>
+        <div aria-roledescription="carousel" aria-label="LinkedIn recommendations">
+          <div class="track" id="track" aria-live="polite">
+            <figure class="quote" role="group" aria-roledescription="slide" aria-label="1 of 4">
+              <blockquote>“Ramesh is a very reliable person. Once a project is assigned to him, you can be rest assured that he will come up with the best possible solutions. … Learns new tech quickly and with considerable depth.”</blockquote>
+              <figcaption><b>Venky Mullapudi</b>Lead Member of Technical Staff, Salesforce</figcaption>
+            </figure>
+            <figure class="quote" role="group" aria-roledescription="slide" aria-label="2 of 4">
+              <blockquote>“Ramesh is a true technical evangelist who fostered collaborative environment. … He is an avid automation expert and inspiration for the team. He understands technology in depth and appreciates right use of tooling for right use case.”</blockquote>
+              <figcaption><b>Soumyak Bhattacharyya</b>Sr. Director, Muthoot FinCorp ONE · Hyderabad Jenkins Meetup</figcaption>
+            </figure>
+            <figure class="quote" role="group" aria-roledescription="slide" aria-label="3 of 4">
+              <blockquote>“I worked with Ramesh for a couple of years as his US Based manager. I always found him to be reliable and thorough in his work and a very good team player. A hard worker who took his work seriously and always tried his best to deliver on time and to the requirements.”</blockquote>
+              <figcaption><b>Douglas Dorsey</b>Senior Manager, Systems Engineering · his manager at Verizon</figcaption>
+            </figure>
+            <figure class="quote" role="group" aria-roledescription="slide" aria-label="4 of 4">
+              <blockquote>“His expertise in Perl, Ksh/Bash, CGI, Unix Automations and ITAM is commendable. His zeal to bring new ideas to the table and to take the projects to completion is something that strikes you when you work with him.”</blockquote>
+              <figcaption><b>Dipak Pai</b>Principal, LTIMindtree · worked together at Verizon</figcaption>
+            </figure>
+          </div>
+          <div class="quote-nav">
+            <button class="arrow" id="prev" type="button" aria-label="Previous recommendation">←</button>
+            <div class="dots" id="dots"></div>
+            <button class="arrow" id="next" type="button" aria-label="Next recommendation">→</button>
+            <a class="more" href="https://www.linkedin.com/in/rago-actions/details/recommendations/" target="_blank" rel="noopener">Read all on LinkedIn →</a>
+          </div>
+        </div>
+      </section>
       <section id="experience">
         <p class="label">Experience</p>
         <ol class="timeline">
@@ -418,6 +468,32 @@
     document.addEventListener("click", (e) => { if (!e.target.closest(".hi")) setHi(false); });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !hiMenu.hidden) { setHi(false); hiBtn.focus(); }
+    });
+
+    const track = document.getElementById("track");
+    const slides = [...track.children];
+    const dots = document.getElementById("dots");
+    let cur = 0;
+    const mark = (i) => { cur = i; [...dots.children].forEach((d, j) => d.setAttribute("aria-current", j === i)); };
+    const go = (i) => {
+      i = (i + slides.length) % slides.length;
+      track.scrollTo({ left: slides[i].offsetLeft - slides[0].offsetLeft });
+      mark(i);
+    };
+    slides.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", `Show recommendation ${i + 1}`);
+      b.addEventListener("click", () => go(i));
+      dots.append(b);
+    });
+    mark(0);
+    document.getElementById("prev").addEventListener("click", () => go(cur - 1));
+    document.getElementById("next").addEventListener("click", () => go(cur + 1));
+    track.addEventListener("scroll", () => {
+      const step = slides[1].offsetLeft - slides[0].offsetLeft;
+      const i = Math.round(track.scrollLeft / step);
+      if (i !== cur) mark(i);
     });
 
     const lines = [
