@@ -3,53 +3,271 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rago Godishela</title>
-  <meta name="description" content="Rago Godishela — personal site.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👋</text></svg>">
+  <title>Ramesh Godishela</title>
+  <meta name="description" content="Ramesh Godishela — Lead Software Engineer, App Performance at Salesforce. Keeping Tier 0 services running. Hyderabad, India.">
+  <meta property="og:title" content="Ramesh Godishela">
+  <meta property="og:description" content="Lead Software Engineer, App Performance at Salesforce. 2× Claude Certified.">
+  <meta property="og:url" content="https://godishela.com/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23c2410c'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='white' font-family='Georgia,serif'>RG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #ffffff;
-      --fg: #111111;
-      --muted: #555555;
-      --accent: #0a66c2;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #0e0e10; --fg: #f2f2f2; --muted: #a0a0a0; --accent: #6cb4ff; }
+      --bg: #f4f3f1;
+      --card: #e9e7e3;
+      --fg: #1c1c1c;
+      --muted: #5f5f5f;
+      --line: #dcdad5;
+      --accent: #c2410c;
+      --serif: "Fraunces", Georgia, serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       background: var(--bg);
+      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.05'/></svg>");
       color: var(--fg);
-      font: 18px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font: 17px/1.6 var(--sans);
+      -webkit-font-smoothing: antialiased;
     }
-    main { max-width: 36rem; padding: 3rem 1.5rem; }
-    h1 { font-size: 2.5rem; line-height: 1.1; margin: 0 0 0.5rem; }
-    .tagline { color: var(--muted); margin: 0 0 1.5rem; }
-    nav { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 2rem; }
-    a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    a:hover, a:focus-visible { text-decoration: underline; }
-    footer { margin-top: 3rem; font-size: 0.85rem; color: var(--muted); }
+    a { color: inherit; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+    /* Header */
+    header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--fg); color: var(--bg);
+      font: 600 1rem var(--serif); text-decoration: none;
+    }
+    nav { display: flex; gap: 2.5rem; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover, nav a:focus-visible { color: var(--fg); }
+    .say-hi {
+      padding: 0.55rem 1.1rem; border-radius: 999px;
+      background: var(--card); text-decoration: none; font-weight: 500;
+    }
+    .say-hi:hover { background: var(--line); }
+
+    /* Hero */
+    .hero {
+      display: grid; grid-template-columns: 1fr 340px; gap: 4rem;
+      padding: 7rem 0 6rem;
+    }
+    h1 {
+      font: 600 clamp(2.75rem, 6vw, 4.75rem)/1.05 var(--serif);
+      letter-spacing: -0.02em; margin: 0;
+    }
+    .rotator {
+      font: 400 clamp(1.75rem, 4vw, 3.25rem)/1.2 var(--serif);
+      color: var(--muted); min-height: 2.6em; margin: 0.5rem 0 0;
+    }
+    .rotator span { display: inline-block; animation: reveal 0.9s ease forwards; }
+    @keyframes reveal {
+      from { filter: blur(14px); opacity: 0; }
+      to { filter: blur(0); opacity: 1; }
+    }
+    .facts { display: grid; grid-template-columns: repeat(3, auto); gap: 2rem; margin-top: 5rem; justify-content: start; }
+    .facts h2 { font: 600 1rem var(--sans); margin: 0 0 0.25rem; }
+    .facts p { margin: 0; color: var(--muted); }
+
+    .intro { border-left: 1px solid var(--line); padding-left: 3rem; align-self: center; }
+    .avatar {
+      width: 140px; height: 140px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--card); border: 4px solid var(--bg); box-shadow: 0 0 0 1px var(--line);
+      font: 600 2.75rem var(--serif); color: var(--accent);
+      object-fit: cover;
+    }
+    .intro h2 { font: 600 1.1rem var(--sans); margin: 1.5rem 0 0.5rem; }
+    .intro p { color: var(--muted); margin: 0; }
+    .socials { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 1.5rem; }
+    .socials a { color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+    .socials a:hover, .socials a:focus-visible { color: var(--accent); }
+
+    /* Sections */
+    section { padding: 3rem 0; }
+    .label { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); font-weight: 500; margin: 0 0 1.5rem; font-size: 1.05rem; }
+    .label::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); }
+
+    .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+    .project {
+      display: block; padding: 2rem; border-radius: 20px;
+      background: var(--card); text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .project:hover, .project:focus-visible { transform: translateY(-3px); background: var(--line); }
+    .tag {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 6px;
+      background: var(--bg); color: var(--muted); font-size: 0.8rem; font-weight: 500;
+    }
+    .project h3 { font: 400 1.65rem/1.2 var(--serif); margin: 1rem 0 0.5rem; }
+    .project p { color: var(--muted); margin: 0; }
+    .project .more { display: inline-block; margin-top: 1.25rem; font-weight: 500; color: var(--fg); }
+
+    .timeline { list-style: none; margin: 0; padding: 0; }
+    .timeline li { display: grid; grid-template-columns: 160px 1fr; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid var(--line); }
+    .timeline li:last-child { border-bottom: 1px solid var(--line); }
+    .when { color: var(--muted); font-size: 0.95rem; padding-top: 0.35rem; }
+    .timeline h3 { font: 400 1.5rem/1.2 var(--serif); margin: 0; }
+    .timeline .role { color: var(--fg); font-weight: 500; margin: 0.25rem 0 0.5rem; }
+    .timeline p { color: var(--muted); margin: 0; max-width: 46rem; }
+
+    footer { padding: 4rem 0 3rem; color: var(--muted); font-size: 0.9rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+    @media (max-width: 860px) {
+      nav { display: none; }
+      .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 0 3rem; }
+      .facts { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 3rem; }
+      .timeline li { grid-template-columns: 1fr; gap: 0.25rem; }
+      .intro { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 2.5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rotator span { animation: none; }
+      .project { transition: none; }
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Rago Godishela</h1>
-    <p class="tagline">TODO: one-line tagline (e.g. role / what you do)</p>
-    <p>TODO: 2–3 sentence bio.</p>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="/" aria-label="Home">RG</a>
+      <nav aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+      </nav>
+      <a class="say-hi" href="mailto:ramesh@godishela.com">👋 Say hi</a>
+    </header>
 
-    <nav aria-label="Social links">
-      <a href="https://www.linkedin.com/in/rago-actions/" rel="me noopener" target="_blank">LinkedIn</a>
-      <a href="https://x.com/rago_actions" rel="me noopener" target="_blank">X / Twitter</a>
-      <a href="https://www.instagram.com/rago_actions/" rel="me noopener" target="_blank">Instagram</a>
-    </nav>
+    <main>
+      <div class="hero" id="about">
+        <div>
+          <h1>Hi, I'm Ramesh</h1>
+          <p class="rotator" aria-live="polite"><span id="line">Building practical dev tools.</span></p>
 
-    <footer>&copy; <span id="y">2026</span> Rago Godishela</footer>
-  </main>
-  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+          <div class="facts">
+            <div>
+              <h2>Currently</h2>
+              <p>Lead Software Engineer @Salesforce</p>
+            </div>
+            <div>
+              <h2>Previously</h2>
+              <p>ATMECS, Verizon, Wells Fargo, Cognizant</p>
+            </div>
+            <div>
+              <h2>Certified</h2>
+              <p>2× Claude Certified</p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="intro">
+          <img class="avatar" src="photo.jpg" alt="Ramesh Godishela" width="140" height="140">
+          <h2>So glad you're here</h2>
+          <p>I keep Tier 0 services running at scale. Off-call, I build dev tools, trek, travel, and lift.</p>
+          <div class="socials">
+            <a href="https://www.linkedin.com/in/rago-actions/" rel="me noopener" target="_blank">LinkedIn</a>
+            <a href="https://x.com/rago_actions" rel="me noopener" target="_blank">X</a>
+            <a href="https://github.com/rago-actions" rel="me noopener" target="_blank">GitHub</a>
+            <a href="https://www.instagram.com/rago_actions/" rel="me noopener" target="_blank">Instagram</a>
+          </div>
+        </aside>
+      </div>
+
+      <section id="experience">
+        <p class="label">Experience</p>
+        <ol class="timeline">
+          <li>
+            <span class="when">2018 — Now</span>
+            <div>
+              <h3>Salesforce</h3>
+              <p class="role">Lead Software Engineer, App Performance</p>
+              <p>Coreapp Production Engineering: keeping Tier 0 services like Coreapp, MQ (async processing) and VegaCache (caching) healthy. Before that, 6.5 years leading Analytics Cloud Platform Engineering: built four teams and ran CI/CD for low-latency, batch, Redis and Cassandra workloads.</p>
+            </div>
+          </li>
+          <li>
+            <span class="when">2015 — 2018</span>
+            <div>
+              <h3>ATMECS Technologies</h3>
+              <p class="role">Tech Lead, DevOps</p>
+              <p>Led the DevOps transformation: CI/CD, infrastructure as code with Terraform, and migrating legacy apps to Docker and OpenShift. Hired and grew the DevOps team.</p>
+            </div>
+          </li>
+          <li>
+            <span class="when">2012 — 2015</span>
+            <div>
+              <h3>Verizon</h3>
+              <p class="role">Senior System Engineer</p>
+              <p>Led asset management teams and built tooling and automation in Perl and Shell for BMC and ILMT.</p>
+            </div>
+          </li>
+          <li>
+            <span class="when">2008 — 2012</span>
+            <div>
+              <h3>Wells Fargo · Cognizant · HCL</h3>
+              <p class="role">Systems engineering &amp; programming</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="projects">
+        <p class="label">Projects</p>
+        <div class="projects">
+          <a class="project" href="https://github.com/rago-actions/ai-inference-gateway" target="_blank" rel="noopener">
+            <span class="tag">Python · Kubernetes</span>
+            <h3>AI Inference Gateway</h3>
+            <p>Routing layer for LLM inference on Kubernetes: latency-aware load balancing, auto-scaling, circuit breakers, and full observability.</p>
+            <span class="more">View on GitHub →</span>
+          </a>
+          <a class="project" href="https://github.com/rago-actions/flyby" target="_blank" rel="noopener">
+            <span class="tag">Swift · macOS</span>
+            <h3>Flyby</h3>
+            <p>A menubar app that flies an airplane across your screen 5 minutes before your next meeting.</p>
+            <span class="more">View on GitHub →</span>
+          </a>
+          <a class="project" href="https://github.com/rago-actions/nlag-telugu-lyrics-library" target="_blank" rel="noopener">
+            <span class="tag">JavaScript</span>
+            <h3>Telugu Lyrics Library</h3>
+            <p>A library of Telugu song lyrics.</p>
+            <span class="more">View on GitHub →</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>&copy; <span id="y">2026</span> Ramesh Godishela</span>
+      <a href="mailto:ramesh@godishela.com">ramesh@godishela.com</a>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    const lines = [
+      "Building practical dev tools.",
+      "Keeping Tier 0 services up.",
+      "Trekking whenever I can.",
+      "Telugu. Tamil. Hindi. English.",
+    ];
+    const el = document.getElementById("line");
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let i = 0;
+      setInterval(() => {
+        i = (i + 1) % lines.length;
+        el.textContent = lines[i];
+        el.style.animation = "none";
+        el.offsetWidth; // restart animation
+        el.style.animation = "";
+      }, 3500);
+    }
+  </script>
 </body>
 </html>
