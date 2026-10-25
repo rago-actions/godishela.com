@@ -119,6 +119,15 @@
     .stats span { color: var(--muted); font-size: 0.9rem; }
     .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
     .chips li { padding: 0.4rem 0.9rem; border-radius: 999px; background: var(--card); font-size: 0.92rem; }
+    .contact-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+    .btn {
+      padding: 0.7rem 1.2rem; border-radius: 999px; border: 1px solid var(--accent);
+      background: var(--accent); color: var(--bg); font: 500 0.95rem var(--sans);
+      text-decoration: none; cursor: pointer;
+    }
+    .btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+    .btn:hover, .btn:focus-visible { filter: brightness(1.1); }
+    .btn.ghost:hover, .btn.ghost:focus-visible { border-color: var(--accent); color: var(--accent); }
     .timeline { list-style: none; margin: 0; padding: 0; }
     .timeline li { display: grid; grid-template-columns: 160px 1fr; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid var(--line); }
     .timeline li:last-child { border-bottom: 1px solid var(--line); }
@@ -155,7 +164,7 @@
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
       </nav>
-      <a class="say-hi" href="mailto:ramesh@godishela.com">👋 Say hi</a>
+      <a class="say-hi" href="#contact">👋 Say hi</a>
     </header>
 
     <main>
@@ -309,6 +318,18 @@
           </a>
         </div>
       </section>
+      <section id="contact">
+        <p class="label">Say hi</p>
+        <div class="feature">
+          <h3>Let's talk tech — or trekking.</h3>
+          <p>Questions about infrastructure, production engineering, or AI tooling? Reach out.</p>
+          <div class="contact-row">
+            <a class="btn" href="mailto:ramesh@godishela.com">ramesh@godishela.com</a>
+            <button class="btn ghost" id="copy" type="button">Copy email</button>
+            <a class="btn ghost" href="https://www.linkedin.com/in/rago-actions/" target="_blank" rel="noopener">Message on LinkedIn</a>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer>
@@ -319,6 +340,13 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    const copy = document.getElementById("copy");
+    copy.addEventListener("click", async () => {
+      await navigator.clipboard.writeText("ramesh@godishela.com");
+      copy.textContent = "Copied ✓";
+      setTimeout(() => (copy.textContent = "Copy email"), 2000);
+    });
 
     const lines = [
       "Building practical dev tools.",
