@@ -243,6 +243,8 @@
       html { scroll-behavior: auto; }
     }
   </style>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -572,12 +574,19 @@
 
     <footer>
       <span>&copy; <span id="y">2026</span> Ramesh Godishela</span>
+      <span id="visits" hidden></span>
       <a href="mailto:ramesh@godishela.com">ramesh@godishela.com</a>
     </footer>
   </div>
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    fetch("/api/visitors").then(r => r.ok ? r.json() : Promise.reject()).then(d => {
+      if (!d.visitors) return;
+      const v = document.getElementById("visits");
+      v.textContent = d.visitors.toLocaleString() + " visitors so far";
+      v.hidden = false;
+    }).catch(() => {});
 
     async function copyEmail(el, msg) {
       if (el.dataset.busy) return;
