@@ -83,7 +83,7 @@
       padding: 7rem 0 6rem;
     }
     h1 {
-      font: 600 clamp(2.75rem, 6vw, 4.75rem)/1.05 var(--serif);
+      font: 600 clamp(1.5rem, 8.5vw - 3rem, 3.9rem)/1.05 var(--serif);
       letter-spacing: -0.02em; margin: 0;
     }
     .lede { font: 500 1.15rem/1.5 var(--sans); color: var(--fg); margin: 1.25rem 0 0; text-wrap: balance; }
@@ -161,6 +161,25 @@
     .btn:hover, .btn:focus-visible { filter: brightness(1.1); }
     .btn.ghost:hover, .btn.ghost:focus-visible { border-color: var(--accent); color: var(--accent); }
     .timeline { list-style: none; margin: 0; padding: 0; }
+    .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    .card { perspective: 1200px; }
+    .card .inner { display: grid; height: 100%; transition: transform 0.6s ease; transform-style: preserve-3d; }
+    .card.flipped .inner { transform: rotateY(180deg); }
+    .face {
+      grid-area: 1 / 1; display: flex; flex-direction: column; gap: 0.5rem;
+      padding: 2rem; border-radius: 20px; background: var(--card); border: 1px solid var(--line);
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    }
+    .face .when { padding: 0; }
+    .back { transform: rotateY(180deg); }
+    .face h3 { font: 400 1.65rem/1.2 var(--serif); margin: 0; }
+    .face .role { color: var(--fg); font-weight: 500; margin: 0; }
+    .face p { color: var(--muted); margin: 0; }
+    .flip {
+      margin-top: auto; align-self: flex-start; padding: 0.45rem 1rem; border-radius: 999px;
+      border: 1px solid var(--line); background: transparent; color: var(--fg); font: 500 0.9rem var(--sans); cursor: pointer;
+    }
+    .flip:hover, .flip:focus-visible { border-color: var(--accent); color: var(--accent); }
     .timeline li { display: grid; grid-template-columns: 160px 1fr; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid var(--line); }
     .timeline li:last-child { border-bottom: 1px solid var(--line); }
     .when { color: var(--muted); font-size: 0.95rem; padding-top: 0.35rem; }
@@ -200,8 +219,10 @@
       header { flex-wrap: wrap; row-gap: 1rem; }
       nav { order: 3; width: 100%; gap: 0.5rem 1.1rem; flex-wrap: wrap; font-size: 0.95rem; }
       .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 0 3rem; }
+      h1 { font-size: clamp(1.25rem, 6.5vw, 3.9rem); }
       .facts { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 3rem; }
       .timeline li { grid-template-columns: 1fr; gap: 0.25rem; }
+      .cards { grid-template-columns: 1fr; }
       .stats { grid-template-columns: repeat(2, 1fr); }
       .feature { padding: 1.75rem; }
       .quote { padding: 1.75rem; }
@@ -211,6 +232,7 @@
     @media (prefers-reduced-motion: reduce) {
       .rotator span { animation: none; }
       .project { transition: none; }
+      .card .inner { transition: none; }
       .track, .projects { scroll-behavior: auto; }
       .dots button::before { transition: none; }
       html { scroll-behavior: auto; }
@@ -330,36 +352,59 @@
       </section>
       <section id="experience">
         <p class="label">Experience</p>
-        <ol class="timeline">
-          <li>
-            <span class="when">2018 — Now</span>
-            <div>
-              <h3>Salesforce</h3>
-              <p class="role">Lead Software Engineer, App Performance</p>
-              <p>Coreapp Production Engineering: keeping Tier 0 services like Coreapp, MQ (async processing) and VegaCache (caching) healthy. Before that, 6.5 years leading Analytics Cloud Platform Engineering: built four teams, ran CI/CD for low-latency, batch, Redis and Cassandra workloads, and built a Django platform for incident management, app security and cloud resources.</p>
+        <ol class="cards">
+          <li class="card">
+            <div class="inner">
+              <div class="face front">
+                <span class="when">2018 — Now</span>
+                <h3>Salesforce</h3>
+                <p class="role">Lead Software Engineer, App Performance</p>
+                <button class="flip" type="button" aria-label="What I did at Salesforce">What I did ↻</button>
+              </div>
+              <div class="face back" inert>
+                <span class="when">Salesforce</span>
+                <p>Coreapp Production Engineering: keeping Tier 0 services like Coreapp, MQ (async processing) and VegaCache (caching) healthy. Before that, 6.5 years leading Analytics Cloud Platform Engineering: built four teams, ran CI/CD for low-latency, batch, Redis and Cassandra workloads, and built a Django platform for incident management, app security and cloud resources.</p>
+                <button class="flip" type="button" aria-label="Back to Salesforce">Back ↺</button>
+              </div>
             </div>
           </li>
-          <li>
-            <span class="when">2015 — 2018</span>
-            <div>
-              <h3>ATMECS Technologies</h3>
-              <p class="role">Tech Lead, DevOps</p>
-              <p>Led the DevOps transformation: CI/CD, infrastructure as code with Terraform, and migrating legacy apps to Docker and OpenShift. Hired and grew the DevOps team.</p>
+          <li class="card">
+            <div class="inner">
+              <div class="face front">
+                <span class="when">2015 — 2018</span>
+                <h3>ATMECS Technologies</h3>
+                <p class="role">Tech Lead, DevOps</p>
+                <button class="flip" type="button" aria-label="What I did at ATMECS Technologies">What I did ↻</button>
+              </div>
+              <div class="face back" inert>
+                <span class="when">ATMECS Technologies</span>
+                <p>Led the DevOps transformation: CI/CD, infrastructure as code with Terraform, and migrating legacy apps to Docker and OpenShift. Hired and grew the DevOps team.</p>
+                <button class="flip" type="button" aria-label="Back to ATMECS Technologies">Back ↺</button>
+              </div>
             </div>
           </li>
-          <li>
-            <span class="when">2012 — 2015</span>
-            <div>
-              <h3>Verizon</h3>
-              <p class="role">Senior System Engineer</p>
-              <p>Led asset management teams and built tooling and automation in Perl and Shell for BMC and ILMT.</p>
+          <li class="card">
+            <div class="inner">
+              <div class="face front">
+                <span class="when">2012 — 2015</span>
+                <h3>Verizon</h3>
+                <p class="role">Senior System Engineer</p>
+                <button class="flip" type="button" aria-label="What I did at Verizon">What I did ↻</button>
+              </div>
+              <div class="face back" inert>
+                <span class="when">Verizon</span>
+                <p>Led asset management teams and built tooling and automation in Perl and Shell for BMC and ILMT.</p>
+                <button class="flip" type="button" aria-label="Back to Verizon">Back ↺</button>
+              </div>
             </div>
           </li>
-          <li>
-            <span class="when">2008 — 2012</span>
-            <div>
-              <h3>Wells Fargo · Cognizant · HCL</h3>
-              <p class="role">Systems engineering &amp; programming</p>
+          <li class="card">
+            <div class="inner">
+              <div class="face front">
+                <span class="when">2008 — 2012</span>
+                <h3>Wells Fargo · Cognizant · HCL</h3>
+                <p class="role">Systems engineering &amp; programming</p>
+              </div>
             </div>
           </li>
         </ol>
@@ -566,6 +611,17 @@
       row.addEventListener("scroll", update);
       addEventListener("resize", update);
       update();
+    });
+
+    document.querySelectorAll(".card").forEach((card) => {
+      const [front, back] = card.querySelectorAll(".face");
+      if (!back) return;
+      card.querySelectorAll(".flip").forEach((btn) => btn.addEventListener("click", () => {
+        const flipped = card.classList.toggle("flipped");
+        front.inert = flipped;
+        back.inert = !flipped;
+        (flipped ? back : front).querySelector(".flip").focus();
+      }));
     });
 
     const track = document.getElementById("track");
