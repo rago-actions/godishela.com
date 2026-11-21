@@ -14,29 +14,35 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Ramesh Godishela, Lead Software Engineer, App Performance at Salesforce">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23fb923c'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='%23111214' font-family='Georgia,serif'>RG</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23febf03' stroke='%23000' stroke-width='6'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='%23000' font-family='Georgia,serif'>RG</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #17141c;
-      --card: #221d29;
-      --fg: #f5f3f7;
-      --muted: #b8b0c2;
-      --line: #332b3d;
-      --accent: #fb923c;
-      --accent2: #f472b6;
-      --serif: "Fraunces", Georgia, serif;
-      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: light;
+      --bg: #faf8f2;
+      --card: #fff;
+      --fg: #000;
+      --muted: #3f3f46;
+      --line: #000;
+      --accent: #fe308a;
+      --accent2: #febf03;
+      --sun: #febf03;
+      --sun-pale: #feefc0;
+      --berry-pale: #fecbe1;
+      --serif: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --sans: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --arcade: "Press Start 2P", monospace;
+      --hard: 4px 4px 0 #000;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
       background: var(--bg);
-      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.05'/></svg>");
+      background-image: radial-gradient(#0000001f 1px, transparent 1.5px);
+      background-size: 22px 22px;
       color: var(--fg);
       font: 17px/1.6 var(--sans);
       -webkit-font-smoothing: antialiased;
@@ -242,6 +248,56 @@
       .dots button::before { transition: none; }
       html { scroll-behavior: auto; }
     }
+
+    /* Bored.com-style theme: paper, 2px black borders, hard offset shadows, sun yellow + berry pink */
+    ::selection { background: var(--sun); color: #000; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    header { border-bottom: 2px solid #000; }
+    .logo { background: var(--sun); color: #000; border: 2px solid #000; border-radius: 12px; box-shadow: var(--hard); font: 400 0.75rem var(--arcade); }
+    nav a { color: #000; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 8px; }
+    nav a:hover, nav a:focus-visible { background: var(--sun); color: #000; }
+    .say-hi { background: var(--sun); color: #000; border: 2px solid #000; box-shadow: var(--hard); font-weight: 700; }
+    .say-hi:hover, .say-hi[aria-expanded="true"] { background: var(--accent); }
+    .hi-menu { border: 2px solid #000; border-radius: 16px; box-shadow: 6px 6px 0 #000; }
+    .tiles a, .tiles button { border: 2px solid #000; color: #000; }
+    .tiles a:hover, .tiles a:focus-visible, .tiles button:hover, .tiles button:focus-visible { background: var(--sun); color: #000; }
+    .menu-links { border-top: 2px solid #000; }
+    .menu-links a:hover, .menu-links a:focus-visible { background: var(--sun-pale); color: #000; }
+
+    h1 { background: linear-gradient(transparent 62%, var(--sun) 62%); -webkit-background-clip: border-box; background-clip: border-box; color: #000; font-weight: 900; letter-spacing: -0.03em; }
+    .rotator { font-weight: 700; }
+    .intro { border-left: 2px solid #000; }
+    .avatar { border: 3px solid #000; border-radius: 24px; box-shadow: 6px 6px 0 #000; }
+    .label { color: #000; font-weight: 800; }
+    .label::before { border: 2px solid #000; border-radius: 3px; background: var(--sun); }
+    .tag { background: var(--sun); color: #000; border: 2px solid #000; font-weight: 700; }
+
+    :is(.project, .card, .quote):nth-child(5n+1) { --tint: var(--sun-pale); }
+    :is(.project, .card, .quote):nth-child(5n+2) { --tint: var(--berry-pale); }
+    :is(.project, .card, .quote):nth-child(5n+3) { --tint: #cefafe; }
+    :is(.project, .card, .quote):nth-child(5n+4) { --tint: #fff; }
+    :is(.project, .card, .quote):nth-child(5n+5) { --tint: #fef5e6; }
+    .project, .face, .quote, .feature { background: var(--tint, #fff); border: 2px solid #000; box-shadow: 6px 6px 0 #000; }
+    .feature { --tint: var(--sun-pale); }
+    .project:hover, .project:focus-visible { background: var(--tint, #fff); transform: translate(-2px, -2px); box-shadow: 8px 8px 0 #000; }
+    .project h3, .feature h3, .face h3, .timeline h3, .stats b { font-weight: 800; }
+    .stats b { color: #000; }
+    .stats div:nth-child(even) b { color: #000; }
+    .timeline li { border-top-width: 2px; }
+    .timeline li:last-child { border-bottom-width: 2px; }
+    .chips li { border: 2px solid #000; border-radius: 10px; box-shadow: 2px 2px 0 #000; font-weight: 600; }
+
+    .btn { background: var(--sun); color: #000; border: 2px solid #000; box-shadow: 3px 3px 0 #000; font-weight: 700; border-radius: 12px; }
+    .btn:hover, .btn:focus-visible { filter: none; transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #000; }
+    .btn.ghost { background: #fff; color: #000; border-color: #000; }
+    .btn.ghost:hover, .btn.ghost:focus-visible { background: var(--berry-pale); color: #000; border-color: #000; }
+    .flip, .arrow { background: #fff; color: #000; border: 2px solid #000; font-weight: 700; }
+    .flip:hover, .flip:focus-visible, .arrow:hover, .arrow:focus-visible { background: var(--sun); color: #000; border-color: #000; }
+    .arrow:disabled { background: #fff; color: #000; border-color: #000; }
+    .dots button::before { background: #00000033; }
+    .dots button[aria-current="true"]::before { background: #000; }
+    .socials a:hover, .socials a:focus-visible, .quote-nav .more:hover, .quote-nav .more:focus-visible { color: #000; text-decoration: underline 3px var(--accent); }
+    footer { border-top: 2px solid #000; margin-top: 2rem; }
   </style>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
