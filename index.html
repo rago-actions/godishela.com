@@ -298,6 +298,52 @@
     .dots button[aria-current="true"]::before { background: #000; }
     .socials a:hover, .socials a:focus-visible, .quote-nav .more:hover, .quote-nav .more:focus-visible { color: #000; text-decoration: underline 3px var(--accent); }
     footer { border-top: 2px solid #000; margin-top: 2rem; }
+
+    /* Metric tiles + cluster bars */
+    .stats { gap: 0; border: 2px solid #000; border-radius: 12px; overflow: hidden; }
+    .stats > div { display: flex; flex-direction: column; padding: 1rem 1.1rem 1.1rem; border-right: 2px solid #000; background: #fff; }
+    .stats > div:last-child { border-right: 0; }
+    .stats > div:nth-child(1) { background: var(--sun); }
+    .stats > div:nth-child(2) { background: var(--berry-pale); }
+    .stats > div:nth-child(3) { background: #cefafe; }
+    .stats > div:nth-child(4) { background: #fff; }
+    .stats small { font: 700 0.7rem var(--arcade); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1.25rem; }
+    .stats b { font-size: 2.75rem; font-weight: 900; margin-bottom: 0.4rem; }
+    .stats span { color: #000; }
+    .fleet { margin-top: 1.75rem; }
+    .fleet-title { margin: 0 0 0.75rem; font-weight: 800; font-size: 1.15rem; }
+    .fleet-title span { font: 400 0.7rem var(--arcade); color: var(--muted); margin-left: 0.5rem; }
+    .bar-row { display: grid; grid-template-columns: 6.5rem 1fr 2.5rem; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; font-weight: 700; }
+    .bar { height: 1.6rem; border: 2px solid #000; border-radius: 8px; background: #fff; overflow: hidden; }
+    .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--sun)); border-right: 2px solid #000; }
+    .bar-row b { text-align: right; font-size: 1.15rem; }
+    @media (max-width: 860px) {
+      .stats > div:nth-child(2) { border-right: 0; }
+      .stats > div:nth-child(-n+2) { border-bottom: 2px solid #000; }
+    }
+
+    section > .stats { margin: 0 0 1.5rem; }
+    .stats.three { grid-template-columns: repeat(3, 1fr); }
+    section > .fleet { margin: 0 0 1.5rem; }
+    .bar-row { grid-template-columns: 7.5rem 1fr 3.5rem; }
+    @media (max-width: 860px) {
+      .stats.three { grid-template-columns: repeat(2, 1fr); }
+      .stats.three > div:last-child { grid-column: 1 / -1; border-top: 2px solid #000; }
+      .stats.three > div:nth-child(2) { border-right: 0; }
+    }
+
+    /* Top-of-page metrics dashboard */
+    .dash { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin: 0 0 3rem; border: 2px solid #000; border-radius: 12px; overflow: hidden; background: #000; }
+    .dash a { display: flex; flex-direction: column; padding: 1rem 1.1rem 1.1rem; color: #000; text-decoration: none; background: #fff; }
+    .dash a:nth-child(4n+1) { background: var(--sun); }
+    .dash a:nth-child(4n+2) { background: var(--berry-pale); }
+    .dash a:nth-child(4n+3) { background: #cefafe; }
+    .dash a:hover, .dash a:focus-visible { background: #000; color: #fff; }
+    .dash a:hover :is(b, span), .dash a:focus-visible :is(b, span) { color: #fff; }
+    .dash small { font: 700 0.7rem var(--arcade); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
+    .dash b { font: 900 2.5rem/1 var(--serif); margin-bottom: 0.4rem; }
+    .dash span { font-size: 0.9rem; }
+    @media (max-width: 860px) { .dash { grid-template-columns: repeat(2, 1fr); } }
   </style>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
@@ -370,6 +416,8 @@
         </aside>
       </div>
 
+      <nav class="stats dash" aria-label="Metrics at a glance"><a href="#experience"><small>Career</small><b>18 yrs</b><span>in tech</span></a><a href="#impact"><small>Fleet</small><b>62</b><span>clusters shipped to</span></a><a href="#impact"><small>Deploys</small><b>40%</b><span>faster</span></a><a href="#impact"><small>Teams</small><b>7</b><span>founded &amp; led</span></a><a href="#certifications"><small>Certs</small><b>8</b><span>4 issuers</span></a><a href="#writing"><small>Writing</small><b>11</b><span>articles</span></a><a href="#projects"><small>Projects</small><b>3</b><span>open source</span></a><a href="#kind-words"><small>Kind words</small><b>4</b><span>recommendations</span></a></nav>
+
       <section id="impact">
         <p class="label">Impact</p>
         <div class="feature">
@@ -377,16 +425,22 @@
           <h3>Shipping to 62 clusters without breaking things.</h3>
           <p>Led continuous deployment across 41 private data center clusters and 21 AWS EKS clusters, with GitOps, drift detection and Python tooling.</p>
           <div class="stats">
-            <div><b>40%</b><span>faster deployments</span></div>
-            <div><b>70%</b><span>faster rollbacks</span></div>
-            <div><b>~3 days</b><span>saved per engineer, monthly</span></div>
-            <div><b>7</b><span>teams founded &amp; led</span></div>
+            <div><small>Deploys</small><b>40%</b><span>faster deployments</span></div>
+            <div><small>Rollbacks</small><b>70%</b><span>faster rollbacks</span></div>
+            <div><small>Per engineer</small><b>~3 days</b><span>saved monthly</span></div>
+            <div><small>Teams</small><b>7</b><span>founded &amp; led</span></div>
+          </div>
+          <div class="fleet">
+            <p class="fleet-title">Where <span>// clusters by platform</span></p>
+            <div class="bar-row"><span>Private DC</span><div class="bar"><i style="width:66.1%"></i></div><b>41</b></div>
+            <div class="bar-row"><span>AWS EKS</span><div class="bar"><i style="width:33.9%"></i></div><b>21</b></div>
           </div>
         </div>
       </section>
 
       <section id="kind-words">
         <p class="label">Kind words</p>
+        <div class="stats three"><div><small>Recommendations</small><b>4</b><span>on LinkedIn</span></div><div><small>Organizations</small><b>3</b><span>Salesforce, Verizon, community</span></div><div><small>Manager</small><b>1</b><span>former manager vouches</span></div></div>
         <div aria-roledescription="carousel" aria-label="LinkedIn recommendations">
           <div class="track" id="track" aria-live="polite">
             <figure class="quote" role="group" aria-roledescription="slide" aria-label="1 of 4">
@@ -416,6 +470,8 @@
       </section>
       <section id="experience">
         <p class="label">Experience</p>
+        <div class="stats three"><div><small>Career</small><b>18 yrs</b><span>in tech since 2008</span></div><div><small>Companies</small><b>6</b><span>Wells Fargo to Salesforce</span></div><div><small>Tier 0</small><b>3</b><span>services kept healthy now</span></div></div>
+        <div class="fleet"><p class="fleet-title">Years <span>// by employer</span></p><div class="bar-row"><span>Salesforce</span><div class="bar"><i style="width:100.0%"></i></div><b>8 yrs</b></div><div class="bar-row"><span>ATMECS</span><div class="bar"><i style="width:37.5%"></i></div><b>3 yrs</b></div><div class="bar-row"><span>Verizon</span><div class="bar"><i style="width:37.5%"></i></div><b>3 yrs</b></div><div class="bar-row"><span>WF · CTS · HCL</span><div class="bar"><i style="width:50.0%"></i></div><b>4 yrs</b></div></div>
         <ol class="cards">
           <li class="card">
             <div class="inner">
@@ -476,6 +532,7 @@
 
       <section id="education">
         <p class="label">Education</p>
+        <div class="stats three"><div><small>Programs</small><b>3</b><span>degree and postgrad</span></div><div><small>Learning</small><b>22 yrs</b><span>from 2001 to 2023</span></div><div><small>Postgrad</small><b>2</b><span>product and engineering mgmt</span></div></div>
         <ol class="timeline">
           <li>
             <span class="when">2021 — 2023</span>
@@ -503,6 +560,8 @@
 
       <section id="certifications">
         <p class="label">Certifications</p>
+        <div class="stats three"><div><small>Total</small><b>8</b><span>active credentials</span></div><div><small>Issuers</small><b>4</b><span>AWS, Anthropic, HashiCorp, Scrum.org</span></div><div><small>Claude</small><b>2</b><span>Architect and Developer</span></div></div>
+        <div class="fleet"><p class="fleet-title">Issuers <span>// certs by vendor</span></p><div class="bar-row"><span>AWS</span><div class="bar"><i style="width:100.0%"></i></div><b>3</b></div><div class="bar-row"><span>Claude</span><div class="bar"><i style="width:66.7%"></i></div><b>2</b></div><div class="bar-row"><span>Scrum.org</span><div class="bar"><i style="width:66.7%"></i></div><b>2</b></div><div class="bar-row"><span>HashiCorp</span><div class="bar"><i style="width:33.3%"></i></div><b>1</b></div></div>
         <ul class="chips">
           <li>Claude Certified Architect</li>
           <li>Claude Certified Developer</li>
@@ -520,6 +579,7 @@
 
       <section id="projects">
         <p class="label">Projects</p>
+        <div class="stats three"><div><small>Projects</small><b>3</b><span>built and shipped</span></div><div><small>Languages</small><b>3</b><span>Python, Swift, JavaScript</span></div><div><small>Open source</small><b>100%</b><span>all public on GitHub</span></div></div>
         <div class="projects">
           <a class="project" href="https://github.com/rago-actions/ai-inference-gateway" target="_blank" rel="noopener">
             <span class="tag">Python · Kubernetes</span>
@@ -547,7 +607,15 @@
       </section>
       <section id="writing">
         <p class="label">Writing</p>
+        <div class="stats three"><div><small>Articles</small><b>11</b><span>and counting</span></div><div><small>On this site</small><b>8</b><span>long-form posts</span></div><div><small>On LinkedIn</small><b>3</b><span>published in 2024</span></div></div>
+        <div class="fleet"><p class="fleet-title">Topics <span>// articles by theme</span></p><div class="bar-row"><span>Kubernetes</span><div class="bar"><i style="width:100.0%"></i></div><b>4</b></div><div class="bar-row"><span>Career · Lead</span><div class="bar"><i style="width:75.0%"></i></div><b>3</b></div><div class="bar-row"><span>Tools · Perf</span><div class="bar"><i style="width:50.0%"></i></div><b>2</b></div><div class="bar-row"><span>Money</span><div class="bar"><i style="width:25.0%"></i></div><b>1</b></div><div class="bar-row"><span>Working style</span><div class="bar"><i style="width:25.0%"></i></div><b>1</b></div></div>
         <div class="projects">
+          <a class="project" href="writing/kakeibo-12-month-buffer.html">
+            <span class="tag">Nov 2026 · Money</span>
+            <h3>The 12-Month Buffer: Kakeibo for Layoff Season</h3>
+            <p>A paper-and-pen Japanese budgeting method and simple math to build a year of runway.</p>
+            <span class="more">Read →</span>
+          </a>
           <a class="project" href="writing/forward-deployed-engineer.html">
             <span class="tag">Career</span>
             <h3>What a Forward Deployed Engineer Actually Does</h3>
@@ -668,6 +736,18 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !hiMenu.hidden) { setHi(false); hiBtn.focus(); }
     });
+
+    const shuffle = (parent) => {
+      const kids = [...parent.children];
+      for (let i = kids.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [kids[i], kids[j]] = [kids[j], kids[i]];
+      }
+      parent.append(...kids);
+      return kids;
+    };
+    shuffle(document.querySelector("#writing .projects"));
+    shuffle(document.getElementById("track")).forEach((s, i, all) => s.setAttribute("aria-label", `${i + 1} of ${all.length}`));
 
     document.querySelectorAll(".projects").forEach((row) => {
       const nav = row.nextElementSibling;
