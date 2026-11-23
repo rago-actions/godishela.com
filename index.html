@@ -344,6 +344,16 @@
     .dash b { font: 900 2.5rem/1 var(--serif); margin-bottom: 0.4rem; }
     .dash span { font-size: 0.9rem; }
     @media (max-width: 860px) { .dash { grid-template-columns: repeat(2, 1fr); } }
+
+    #this-month .label span { font-weight: 600; color: var(--muted); margin-left: 0.4rem; }
+    #this-month .chips a { color: #000; text-decoration: none; font-weight: 700; }
+    #this-month .chips a:hover, #this-month .chips a:focus-visible { text-decoration: underline 3px var(--accent); }
+    #this-month .chips small { font: 700 0.65rem var(--arcade); margin-right: 0.5rem; }
+
+    .doing { margin-top: 1.75rem; }
+    .doing ul { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+    .doing li { color: var(--muted); }
+    .doing li b { color: #000; }
   </style>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
@@ -418,6 +428,11 @@
 
       <nav class="stats dash" aria-label="Metrics at a glance"><a href="#experience"><small>Career</small><b>18 yrs</b><span>in tech</span></a><a href="#impact"><small>Fleet</small><b>62</b><span>clusters shipped to</span></a><a href="#impact"><small>Deploys</small><b>40%</b><span>faster</span></a><a href="#impact"><small>Teams</small><b>7</b><span>founded &amp; led</span></a><a href="#certifications"><small>Certs</small><b>8</b><span>4 issuers</span></a><a href="#writing"><small>Writing</small><b>11</b><span>articles</span></a><a href="#projects"><small>Projects</small><b>3</b><span>open source</span></a><a href="#kind-words"><small>Kind words</small><b>4</b><span>recommendations</span></a></nav>
 
+      <section id="this-month" hidden>
+        <p class="label">This month <span id="this-month-name"></span></p>
+        <ul class="chips" id="this-month-list"></ul>
+      </section>
+
       <section id="impact">
         <p class="label">Impact</p>
         <div class="feature">
@@ -434,6 +449,18 @@
             <p class="fleet-title">Where <span>// clusters by platform</span></p>
             <div class="bar-row"><span>Private DC</span><div class="bar"><i style="width:66.1%"></i></div><b>41</b></div>
             <div class="bar-row"><span>AWS EKS</span><div class="bar"><i style="width:33.9%"></i></div><b>21</b></div>
+          </div>
+          <div class="doing">
+            <p class="fleet-title">Today <span>// Coreapp Production Engineering</span></p>
+            <ul>
+              <li><b>Own Tier 0 services end to end.</b> Core application server and async processing (MQ), from architecture input to running them in production.</li>
+              <li><b>Run incidents and kill repeats.</b> Lead remediation, then feed root causes into the engineering backlog so the same incident does not come back.</li>
+              <li><b>Automate detection and healing.</b> Use AIOps for anomaly detection and runbook automation, aimed at lower MTTD and MTTR.</li>
+              <li><b>Debug at scale.</b> Heap dumps, profiling, JVM and GC tuning, and reading production data for latency, memory and CPU.</li>
+              <li><b>Keep the platform current.</b> Work with systems engineering on OS patching, JDK upgrades and configuration changes.</li>
+              <li><b>Help other teams ship.</b> Consult and onboard engineers building on the platform; mentor; carry the 24x7 on-call rotation.</li>
+            </ul>
+            <!-- TODO real metrics (replace with actuals before adding to page): services owned, incidents handled per quarter, MTTD/MTTR change, repeat-incident reduction, JDK/OS upgrade coverage, engineers onboarded. -->
           </div>
         </div>
       </section>
@@ -610,7 +637,7 @@
         <div class="stats three"><div><small>Articles</small><b>11</b><span>and counting</span></div><div><small>On this site</small><b>8</b><span>long-form posts</span></div><div><small>On LinkedIn</small><b>3</b><span>published in 2024</span></div></div>
         <div class="fleet"><p class="fleet-title">Topics <span>// articles by theme</span></p><div class="bar-row"><span>Kubernetes</span><div class="bar"><i style="width:100.0%"></i></div><b>4</b></div><div class="bar-row"><span>Career · Lead</span><div class="bar"><i style="width:75.0%"></i></div><b>3</b></div><div class="bar-row"><span>Tools · Perf</span><div class="bar"><i style="width:50.0%"></i></div><b>2</b></div><div class="bar-row"><span>Money</span><div class="bar"><i style="width:25.0%"></i></div><b>1</b></div><div class="bar-row"><span>Working style</span><div class="bar"><i style="width:25.0%"></i></div><b>1</b></div></div>
         <div class="projects">
-          <a class="project" href="writing/kakeibo-12-month-buffer.html">
+          <a class="project" href="writing/kakeibo-12-month-buffer.html" data-date="2026-11-24">
             <span class="tag">Nov 2026 · Money</span>
             <h3>The 12-Month Buffer: Kakeibo for Layoff Season</h3>
             <p>A paper-and-pen Japanese budgeting method and simple math to build a year of runway.</p>
@@ -658,19 +685,19 @@
             <p>How I learn, work and take feedback, so we skip the guesswork.</p>
             <span class="more">Read →</span>
           </a>
-          <a class="project" href="https://www.linkedin.com/pulse/demonstrating-your-worth-devops-sre-mlops-roles-ramesh-godishela-8yd1c" target="_blank" rel="noopener">
+          <a class="project" href="https://www.linkedin.com/pulse/demonstrating-your-worth-devops-sre-mlops-roles-ramesh-godishela-8yd1c" data-date="2024-02" target="_blank" rel="noopener">
             <span class="tag">Feb 2024 · Career</span>
             <h3>Demonstrating Your Worth in DevOps, SRE, and MLOps Roles</h3>
             <p>Ops work goes unnoticed until something breaks. How to show its impact in terms the business cares about.</p>
             <span class="more">Read on LinkedIn →</span>
           </a>
-          <a class="project" href="https://www.linkedin.com/pulse/build-teams-care-personally-ramesh-godishela-7iehc" target="_blank" rel="noopener">
+          <a class="project" href="https://www.linkedin.com/pulse/build-teams-care-personally-ramesh-godishela-7iehc" data-date="2024-02" target="_blank" rel="noopener">
             <span class="tag">Feb 2024 · Leadership</span>
             <h3>Build Teams &amp; Care Personally</h3>
             <p>What building seven teams taught me, through the lens of Kim Scott's Radical Candor.</p>
             <span class="more">Read on LinkedIn →</span>
           </a>
-          <a class="project" href="https://www.linkedin.com/pulse/terraform-import-ramesh-godishela-3p98c" target="_blank" rel="noopener">
+          <a class="project" href="https://www.linkedin.com/pulse/terraform-import-ramesh-godishela-3p98c" data-date="2024-04" target="_blank" rel="noopener">
             <span class="tag">Apr 2024 · Terraform</span>
             <h3>Terraform Import</h3>
             <p>Bringing existing infrastructure under Terraform: the process, the risks, and practices for teams.</p>
@@ -736,6 +763,26 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !hiMenu.hidden) { setHi(false); hiBtn.focus(); }
     });
+
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const recent = [...document.querySelectorAll("[data-date]")].filter((e) => e.dataset.date.startsWith(ym));
+    if (recent.length) {
+      const list = document.getElementById("this-month-list");
+      recent.forEach((e) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = e.getAttribute("href");
+        if (a.origin !== location.origin) { a.target = "_blank"; a.rel = "noopener"; }
+        const tag = document.createElement("small");
+        tag.textContent = e.querySelector(".tag").textContent.split("·").pop().trim();
+        a.append(tag, e.querySelector("h3").textContent);
+        li.append(a);
+        list.append(li);
+      });
+      document.getElementById("this-month-name").textContent = now.toLocaleDateString("en", { month: "long", year: "numeric" });
+      document.getElementById("this-month").hidden = false;
+    }
 
     const shuffle = (parent) => {
       const kids = [...parent.children];
